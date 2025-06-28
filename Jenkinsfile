@@ -104,24 +104,49 @@ pipeline {
             }
         }
 
+        // stage('Push Docker Image to AWS ECR') {
+        //    steps {
+        //       script {
+        //          withDockerRegistry([credentialsId:'aws-dev-ops-admin', url:"https://999331376056.dkr.ecr.ap-south-1.amazonaws.com"]){
+        //          sh """
+        //          echo "List the docker images present in local"
+        //          docker images
+        //          echo "Tagging the Docker Image: In Progress"
+        //          docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+        //          echo "Tagging the Docker Image: Completed"
+        //          echo "Push Docker Image to ECR : In Progress"
+        //          docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+        //          echo "Push Docker Image to ECR : Completed"
+        //          """
+        //          }
+        //       }
+        //    }
+        // }
+
         stage('Push Docker Image to AWS ECR') {
            steps {
               script {
-                 withDockerRegistry([credentialsId:'aws-dev-ops-admin', url:"https://999331376056.dkr.ecr.ap-south-1.amazonaws.com"]){
-                 sh """
-                 echo "List the docker images present in local"
-                 docker images
-                 echo "Tagging the Docker Image: In Progress"
-                 docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
-                 echo "Tagging the Docker Image: Completed"
-                 echo "Push Docker Image to ECR : In Progress"
-                 docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
-                 echo "Push Docker Image to ECR : Completed"
-                 """
+                 withCredentials([usernamePassword(credentialsId: 'aws-dev-ops-admin', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                     sh '''
+                        echo "Configuring AWS CLI"
+                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+                        aws configure set default.region ap-south-1
+
+                        echo "Logging in to AWS ECR"
+                        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 999331376056.dkr.ecr.ap-south-1.amazonaws.com
+
+                        echo "Tagging Docker Image"
+                        docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+
+                        echo "Pushing Docker Image to ECR"
+                        docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+                     '''
                  }
               }
            }
         }
+
 
     }
 }
