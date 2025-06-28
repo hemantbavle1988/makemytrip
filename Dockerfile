@@ -5,7 +5,7 @@ FROM amazoncorretto:21
 WORKDIR /app
 
 # Copy your Spring Boot JAR into the container
-COPY target/*.jar app.jar
+COPY target/*.war app.war
 
 # Expose the port your app runs on
 EXPOSE 8080
