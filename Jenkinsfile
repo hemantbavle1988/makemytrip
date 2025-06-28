@@ -124,28 +124,24 @@ pipeline {
         // }
 
         stage('Push Docker Image to AWS ECR') {
-           steps {
-              script {
-                 withCredentials([usernamePassword(credentialsId: 'aws-dev-ops-admin', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                     sh '''
-                        echo "Configuring AWS CLI"
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws configure set default.region ap-south-1
+            steps {
+                script {
+                    withAWS(credentials: 'aws-dev-ops-admin', region: 'ap-south-1') {
+                        sh '''
+                            echo "Logging in to AWS ECR"
+                            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 999331376056.dkr.ecr.ap-south-1.amazonaws.com
 
-                        echo "Logging in to AWS ECR"
-                        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 999331376056.dkr.ecr.ap-south-1.amazonaws.com
+                            echo "Tagging Docker Image"
+                            docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
 
-                        echo "Tagging Docker Image"
-                        docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
-
-                        echo "Pushing Docker Image to ECR"
-                        docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
-                     '''
-                 }
-              }
-           }
+                            echo "Pushing Docker Image to ECR"
+                            docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+                        '''
+                    }
+                }
+            }
         }
+
 
 
     }
