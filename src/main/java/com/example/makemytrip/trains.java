@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class trains {
     @GetMapping("trains")
     public String getData(){
-        return "Get train tkts faster!";
+        return "Get Your train tickets as fast as IRCTC website... or sometimes faster!";
     }
 }
