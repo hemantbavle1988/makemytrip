@@ -99,6 +99,7 @@ pipeline {
                             echo "Push Docker Image to DockerHub : Completed"
                         '''
                     }
+                    echo "Attempt completed.."
                 }
             }
         }
