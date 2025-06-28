@@ -104,5 +104,24 @@ pipeline {
             }
         }
 
+        stage('Push Docker Image to AWS ECR') {
+           steps {
+              script {
+                 withDockerRegistry([credentialsId:'aws-dev-ops-admin', url:"https://999331376056.dkr.ecr.ap-south-1.amazonaws.com"]){
+                 sh """
+                 echo "List the docker images present in local"
+                 docker images
+                 echo "Tagging the Docker Image: In Progress"
+                 docker tag mmt-repo:latest 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+                 echo "Tagging the Docker Image: Completed"
+                 echo "Push Docker Image to ECR : In Progress"
+                 docker push 999331376056.dkr.ecr.ap-south-1.amazonaws.com/hemantbavle1988/mmt-repo:latest
+                 echo "Push Docker Image to ECR : Completed"
+                 """
+                 }
+              }
+           }
+        }
+
     }
 }
