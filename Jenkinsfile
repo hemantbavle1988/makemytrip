@@ -11,32 +11,37 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "------Checkout Phase------"
-
+                echo "------Checkout Phase Begins------"
                 git branch: 'main', url: 'https://github.com/hemantbavle1988/makemytrip.git'
+                echo "------Checkout Phase Ends------"
+
             }
         }
         stage('Compile') {
             steps {
 
-                echo "------Compile Phase------"
+                echo "------Compile Phase Begins------"
                 sh 'mvn clean compile'
+                echo "------Compile Phase Ends------"
+                
             }
         }
-        stage('Build') {
+        stage('QA Test') {
             steps {
 
-                echo "------Build Phase------"
-                sh 'mvn clean install'
+                echo "------ QA Test Begins ------"
+                sh 'mvn clean test'
+                echo "------ QA Test Ends ------"
             }
         }
-
-        stage('Post Build') {
+        stage('Package') {
             steps {
-
-                echo "------Post Build Phase------"
+                echo "------ Code Artifact Creation Begins ------"
+                sh 'mvn clean package'
+                echo "------ Code Artifact Creation Ends ------"
             }
-         }
+        }
+        stage ('Docker ')
 
     }
 }

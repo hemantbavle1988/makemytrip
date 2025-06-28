@@ -13,6 +13,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>makemytrip</name>
 	<description>Demo project for Spring Boot</description>
+	<packaging>war</packaging>
+
 	<url/>
 	<licenses>
 		<license/>
