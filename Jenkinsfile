@@ -74,7 +74,7 @@ pipeline {
             steps {
                 echo "Starting Building Docker Image"
                 sh "docker build -t mmt-repo ."
-                sh "docker tag mmt-repo hemantbavle1988/mmt-repo:latest"
+                sh "docker tag mmt-repo hemantbavle/mmt-repo:latest"
                 echo 'Docker Image Build Completed'
             }
         }
@@ -95,7 +95,7 @@ pipeline {
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             echo "Push Docker Image to DockerHub : In Progress"
-                            docker push hemantbavle1988/mmt-repo:latest
+                            docker push hemantbavle/mmt-repo:latest
                             echo "Push Docker Image to DockerHub : Completed"
                         '''
                     }
