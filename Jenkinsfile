@@ -26,6 +26,13 @@ pipeline {
             }
         }
 
+        stage('Post Build') {
+                    steps {
+
+                        echo "------Post Build Phase------"
+                    }
+         }
+
 
     }
 }
