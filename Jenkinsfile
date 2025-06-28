@@ -41,33 +41,66 @@ pipeline {
                 echo "------ Code Artifact Creation Ends ------"
             }
         }
-         stage('Building & Tag Docker Image') {
+        // stage('Building & Tag Docker Image') {
+        //     steps {
+        //         echo "Starting Building Docker Image"
+        //         sh "docker build -t hemantbavle1988/mmt-repo ."
+        //         sh "docker build -t mmt-repo ."
+        //         echo 'Docker Image Build Completed'
+        //     }
+        // }
+        // stage('Docker Image Scanning') {
+        //     steps {
+        //         echo 'Docker Image Scanning Started'
+        //         sh 'docker --version'
+        //         echo 'Docker Image Scanning Started'
+        //     }
+        // }
+        // stage('Docker push to Docker Hub') {
+        //    steps {
+        //     script{
+        //             echo "Attempting to Login with Docker credentials.."
+        //             withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+        //                 echo "Push Docker Image to DockerHub : In Progress"
+        //                 sh 'docker push hemantbavle1988/mmt-repo:latest'
+        //                 echo "Push Docker Image to DockerHub : In Progress"
+        //             }
+        //         }
+        //     }   
+        // }
+
+        stage('Building & Tag Docker Image') {
             steps {
                 echo "Starting Building Docker Image"
-                sh "docker build -t hemantbavle1988/mmt-repo ."
                 sh "docker build -t mmt-repo ."
+                sh "docker tag mmt-repo hemantbavle1988/mmt-repo:latest"
                 echo 'Docker Image Build Completed'
             }
         }
+
         stage('Docker Image Scanning') {
             steps {
                 echo 'Docker Image Scanning Started'
                 sh 'docker --version'
-                echo 'Docker Image Scanning Started'
+                echo 'Docker Image Scanning Completed'
             }
         }
+
         stage('Docker push to Docker Hub') {
-           steps {
-            script{
+            steps {
+                script {
                     echo "Attempting to Login with Docker credentials.."
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        echo "Push Docker Image to DockerHub : In Progress"
-                        sh 'docker push hemantbavle1988/mmt-repo:latest'
-                        echo "Push Docker Image to DockerHub : In Progress"
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            echo "Push Docker Image to DockerHub : In Progress"
+                            docker push hemantbavle1988/mmt-repo:latest
+                            echo "Push Docker Image to DockerHub : Completed"
+                        '''
                     }
                 }
-            }   
+            }
         }
 
     }
