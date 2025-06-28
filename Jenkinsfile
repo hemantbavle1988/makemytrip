@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: ''))
+    }
+
     tools {
         maven 'maven-3.9.10'  // same name as configured above
     }
@@ -27,12 +32,11 @@ pipeline {
         }
 
         stage('Post Build') {
-                    steps {
+            steps {
 
-                        echo "------Post Build Phase------"
-                    }
+                echo "------Post Build Phase------"
+            }
          }
-
 
     }
 }
