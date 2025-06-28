@@ -41,7 +41,6 @@ pipeline {
                 echo "------ Code Artifact Creation Ends ------"
             }
         }
-        stage ('Docker ')
 
     }
 }
