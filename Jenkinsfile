@@ -8,7 +8,7 @@ pipeline {
             steps {
                 echo "------Checkout Phase------"
 
-                git 'https://github.com/hemantbavle1988/makemytrip.git'
+                git branch: 'main', url: 'https://github.com/hemantbavle1988/makemytrip.git'
             }
         }
         stage('Compile') {
