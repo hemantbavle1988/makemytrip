@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "------Checkout Phase------"
-                git pull 'https://github.com/hemantbavle1988/makemytrip.git'
+                git 'https://github.com/hemantbavle1988/makemytrip.git'
             }
         }
         stage('Build') {
