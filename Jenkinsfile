@@ -41,6 +41,33 @@ pipeline {
                 echo "------ Code Artifact Creation Ends ------"
             }
         }
+         stage('Building & Tag Docker Image') {
+            steps {
+                echo "Starting Building Docker Image"
+                sh "docker build -t hemantbavle1988/mmt-repo ."
+                sh "docker build -t mmt-repo ."
+                echo 'Docker Image Build Completed'
+            }
+        }
+        stage('Docker Image Scanning') {
+            steps {
+                echo 'Docker Image Scanning Started'
+                sh 'docker --version'
+                echo 'Docker Image Scanning Started'
+            }
+        }
+        stage(' Docker push to Docker Hub') {
+           steps {
+              script {
+                 withCredentials([string(credentialsId: 'docker-hub-creds', variable: 'dockerhubCred')]){
+                 sh 'docker login docker.io -u hemantbavle@gmail.com -p ${dockerhubCred}'
+                 echo "Push Docker Image to DockerHub : In Progress"
+                 sh 'docker push hemantbavle1988/mmt-repo:latest'
+                 echo "Push Docker Image to DockerHub : In Progress"
+                 }
+              }
+            }
+        }
 
     }
 }
